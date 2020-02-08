@@ -18,10 +18,16 @@ func printFiles(dir string) {
 
 func main() {
 	var dirs = os.Args[1:]
-	if len(dirs) == 0 {
+	switch len(dirs) {
+	case 0:
 		printFiles("./")
-	} else {
-		for _, dir := range dirs {
+	case 1:
+		printFiles(dirs[0])
+	default:
+		for i, dir := range dirs {
+			if i > 0 {
+				fmt.Println()
+			}
 			fmt.Println(dir + ":")
 			printFiles(dir)
 		}
