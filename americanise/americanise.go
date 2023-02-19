@@ -31,7 +31,7 @@ func americanise(inFile io.Reader, outFile io.Writer) (err error) {
     eof := false
     for !eof {
         var line string
-        line, err = reader.ReadString("\n")
+        line, err = reader.ReadString('\n')
 
         if err == io.EOF {
             eof = true
@@ -110,7 +110,7 @@ func main() {
     }
 
     if outFilename != "" {
-        if outFile, err = os.Open(outFilename); err != nil {
+        if outFile, err = os.Create(outFilename); err != nil {
             log.Fatal(err)
         }
 
