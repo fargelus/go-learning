@@ -70,9 +70,9 @@ func writePlsPlaylist(songs []Song) {
     fmt.Println("[playlist]")
     for i, song := range songs {
         i++
-        fmt.Printf("File%d=%s\n", i, song.Filename)
-        fmt.Printf("Title%d=%s\n", i, song.Title)
-        fmt.Printf("Length%d=%s\n", i, song.Seconds)
+        fmt.Printf("File_%d=%s\n", i, song.Filename)
+        fmt.Printf("Title_%d=%s\n", i, song.Title)
+        fmt.Printf("Length_%d=%d\n", i, song.Seconds)
     }
 
     fmt.Printf("NumberOfEntries=%d\nVersion=2\n", len(songs))
