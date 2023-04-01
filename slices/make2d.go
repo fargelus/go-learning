@@ -1,16 +1,18 @@
 package main
 
-import (
-  "fmt"
-  "math"
-)
+import "fmt"
 
-func matrixSize(vectorLen int, rows int) int {
-    return int(math.Ceil(float64(vectorLen) / float64(rows)))
+func matrixSize(vector []int, rows int) int {
+    size := len(vector) / rows
+    if len(vector) % rows != 0 {
+        size++
+    }
+    
+    return size
 }
 
 func make2D(vector []int, rows int) (int, [][]int) {
-    matrix := make([][]int, 0, matrixSize(len(vector), rows))
+    matrix := make([][]int, 0, matrixSize(vector, rows))
     row := make([]int, rows)
     for i, elem := range vector {
         row[i % rows] = elem
