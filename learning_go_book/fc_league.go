@@ -1,8 +1,23 @@
 package main
 
+/*
+1. You have been asked to manage a basketball league and are going to write a program to help you.
+Define two types. The first one, called Team, has a field for the name of the team and a field for the player names.
+The second type is called League and has a field called Teams for the teams in the league and a field called Wins that maps a team’s name to its number of wins.
+
+2. Add two methods to League. The first method is called MatchResult. It takes four parameters: the name of the first team, its score in the game, the name of the second team, and its score in the game.
+This method should update the Wins field in League.
+Add a second method to League called Ranking that returns a slice of the team names in order of wins.
+Build your data structures and call these methods from the main function in your program using some sample data.
+
+3. Define an interface called Ranker that has a single method called Ranking that returns a slice of strings.
+Write a function called RankPrinter with two parameters, the first of type Ranker and the second of type io.Writer.
+Use the io.WriteString function to write the values returned by Ranker to the io.Writer, with a newline separating each result.
+Call this function from main.
+*/
+
 import (
 	"fmt"
-	"maps"
 	"slices"
 )
 
@@ -29,7 +44,20 @@ func (l *League) MatchResult(firstTeamName string, firstTeamScore int, secondTea
 }
 
 func (l *League) Ranking() []string {
-	return slices.Collect(maps.Keys(l.Wins))
+	ranks := make([]string, len(l.Teams))
+	for i, team := range l.Teams {
+		ranks[i] = team.Name
+	}
+
+	slices.SortFunc(ranks, func(a, b string) int {
+		if l.Wins[a] > l.Wins[b] {
+			return -1
+		} else {
+			return 1
+		}
+	})
+
+	return ranks
 }
 
 func main() {
@@ -50,8 +78,12 @@ func main() {
 		Name:        "Bayern Munich",
 		PlayerNames: []string{"Arjen Robben", "Frank Ribery", "Manuel Neuer"},
 	}
+	barcelona := Team{
+		Name:        "Barcelona",
+		PlayerNames: []string{"Lionel Messi", "Xavi Hernandez", "Andres Iniesta"},
+	}
 
-	league.Teams = []Team{arsenal, manchesterCity, manchesterUnited}
+	league.Teams = []Team{barcelona, manchesterCity, arsenal, bavaria, manchesterUnited}
 	league.Wins = make(map[string]int)
 
 	league.MatchResult(arsenal.Name, 3, manchesterCity.Name, 2)
