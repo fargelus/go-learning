@@ -18,6 +18,8 @@ Call this function from main.
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"slices"
 )
 
@@ -31,19 +33,7 @@ type League struct {
 	Wins  map[string]int
 }
 
-func (l *League) MatchResult(firstTeamName string, firstTeamScore int, secondTeamName string, secondTeamScore int) {
-	if firstTeamScore == secondTeamScore {
-		return
-	}
-
-	if firstTeamScore > secondTeamScore {
-		l.Wins[firstTeamName] += 1
-	} else {
-		l.Wins[secondTeamName] += 1
-	}
-}
-
-func (l *League) Ranking() []string {
+func (l League) Ranking() []string {
 	ranks := make([]string, len(l.Teams))
 	for i, team := range l.Teams {
 		ranks[i] = team.Name
@@ -60,8 +50,31 @@ func (l *League) Ranking() []string {
 	return ranks
 }
 
-func main() {
+func (l *League) MatchResult(firstTeamName string, firstTeamScore int, secondTeamName string, secondTeamScore int) {
+	if firstTeamScore == secondTeamScore {
+		return
+	}
+
+	if firstTeamScore > secondTeamScore {
+		l.Wins[firstTeamName] += 1
+	} else {
+		l.Wins[secondTeamName] += 1
+	}
+}
+
+type Ranker interface {
+	Ranking() []string
+}
+
+func RankPrinter(r Ranker, w io.Writer) {
+	for i, rank := range r.Ranking() {
+		io.WriteString(w, fmt.Sprintf("%d. %s\n", i+1, rank))
+	}
+}
+
+func prepareLeagueData() League {
 	league := League{}
+
 	arsenal := Team{
 		Name:        "Arsenal",
 		PlayerNames: []string{"Robin Van Persie", "Alexis Sanchez", "Thierry Henry"},
@@ -93,5 +106,17 @@ func main() {
 	league.MatchResult(manchesterCity.Name, 2, bavaria.Name, 1)
 	league.MatchResult(arsenal.Name, 3, bavaria.Name, 0)
 
-	fmt.Println(league.Ranking())
+	return league
+}
+
+func main() {
+	l := prepareLeagueData()
+
+	fmt.Println("Calling Ranking() method:")
+	fmt.Println(l.Ranking())
+
+	fmt.Println("----------")
+
+	fmt.Println("Calling RankPrinter func:")
+	RankPrinter(l, os.Stdout)
 }
