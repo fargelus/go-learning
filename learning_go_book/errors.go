@@ -63,17 +63,29 @@ func validateEmployee(e Employee) error {
 func printErrors(wrappedErrors error) {
 	joinedErr := wrappedErrors.(interface{ Unwrap() []error })
 
-	for _, e := range joinedErr.Unwrap() {
-		fmt.Printf("- %v\n", e)
+	fmt.Printf("- ")
+	for i, e := range joinedErr.Unwrap() {
+		if i > 0 {
+			fmt.Printf(", ")
+		}
+		fmt.Printf("%v", e)
 	}
+	fmt.Println("")
 }
 
 func main() {
 	errs := validateEmployee(Employee{Id: 1, Name: "John", LastName: ""})
-	printErrors(errs)
-
-	fmt.Println("")
+	if errs != nil {
+		printErrors(errs)
+	}
 
 	errs = validateEmployee(Employee{Id: -1, Name: "", LastName: "Doe"})
-	printErrors(errs)
+	if errs != nil {
+		printErrors(errs)
+	}
+
+	errs = validateEmployee(Employee{Id: 2, Name: "Sam", LastName: "Jones"})
+	if errs != nil {
+		printErrors(errs)
+	}
 }
